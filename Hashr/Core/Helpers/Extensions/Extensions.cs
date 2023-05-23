@@ -9,6 +9,8 @@ using Hashr.Data.Models;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 
+using Spectre.Console;
+
 namespace Hashr.Core.Helpers.Extensions
 {
     public static class ModelExtensions
@@ -35,5 +37,37 @@ namespace Hashr.Core.Helpers.Extensions
                 HashAlgorithm.Whirlpool => new WhirlpoolDigest()
             };
         }
+    }
+
+    public static class CryptoExtensions
+    {
+        public static byte[] GetHashBuffer(this IDigest digest)
+        {
+            byte[] hashBuffer = new byte[digest.GetDigestSize()];
+
+            return hashBuffer;
+        }
+
+        public static string GetHash(this IDigest digest)
+        {
+            byte[] hashBuffer = digest.GetHashBuffer();
+
+            digest.DoFinal(hashBuffer, 0);
+
+            return hashBuffer.ToReadableString();
+        }
+    }
+
+    public static class ArrayExtensions
+    {
+        public static string ToReadableString(this byte[] byteArray)
+        {
+            return BitConverter.ToString(byteArray).Replace("-", string.Empty).ToLowerInvariant();
+        }
+    }
+
+    public static class SpectreConsoleExtensions
+    {
+        
     }
 }
